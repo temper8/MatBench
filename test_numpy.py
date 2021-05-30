@@ -11,7 +11,7 @@ def create_mat(n):
 def mult_mat(A,B):
 	return np.dot(A,B)
 
-n = 15000
+n = 8000
 print(f"numpy mult test N={n}")
 
 (a,b) = create_mat(n)
