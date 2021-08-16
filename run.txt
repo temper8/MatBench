@@ -1,0 +1,1 @@
+ifort  cgesv_ex.f  /module:"%MKLROOT%\include\intel64\ilp64" /4I8  -I"%MKLROOT%\include"  mkl_lapack95_ilp64.lib mkl_intel_ilp64.lib mkl_intel_thread.lib mkl_core.lib libiomp5md.lib
