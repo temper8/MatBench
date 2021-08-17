@@ -1,7 +1,7 @@
 program solve
 !     .. Parameters ..
 	INTEGER          N, NRHS
-	PARAMETER        ( N = 10000, NRHS = 2 )
+	PARAMETER        ( N = 10, NRHS = 2 )
 	INTEGER          LDA, LDB
 	PARAMETER        ( LDA = N, LDB = N )
 
@@ -16,7 +16,7 @@ program solve
 !		  COMPLEX          A( LDA, N ), B( LDB, NRHS )
 	complex, dimension (:,:), allocatable :: A
 	complex, dimension (:), allocatable :: R	
-	complex, dimension(LDB,N) :: B	
+	complex, dimension (:,:), allocatable :: B	
 
 	!real(8), dimension (:,:), allocatable :: A
 	!real(8), dimension (:), allocatable :: R	
@@ -38,21 +38,21 @@ program solve
 
 
 	 allocate ( A(N,N) )
-	 
+	 allocate ( B(LDB,NRHS) )
 	 allocate ( R(N) )
-     print *, 'Hello, matmul'
+     print *, 'Solve the equations A*X = B.'
      print *, "         n", "      init","         parallel", "     no-parallel"
      !do nn = 100, 2500, 100
      call cpu_time(T1)  
 	!call dlarnv	(1, ISEED, N,	A )	
 	!call dlarnv	(1, ISEED, N,	R )	
-	call clarnv	(1, ISEED, N,	A )	
+	call clarnv	(1, ISEED, N*N,	A )	
 	call clarnv	(1, ISEED, N,	R )	
 
 	print *, "1"
 	do i = 1,N
-     B(1,i) = R(i)    
-	 B(2,i) = R(i)
+     B(i,1) = R(i)    
+	 B(i,2) = R(i)
 	end do 
 	print *, "2"
      call cpu_time(T2)
@@ -69,7 +69,7 @@ program solve
 	CALL SYSTEM_CLOCK(c2)	
 	dt3 = T2-T1
 	sys_clock = (c2 - c1)/rate
-
+	print *, INFO
 	print *, dt3, sys_clock
      !print *, sum(c) 
      print *,"end"
