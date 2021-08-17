@@ -1,7 +1,34 @@
+
+module utils
+  contains
+	subroutine PRINT_MATRIX( DESC, M, N, A, LDA )
+	  CHARACTER*(*)    DESC
+	  INTEGER          M, N, LDA
+	  INTEGER          M1, N1
+	  COMPLEX          A( LDA, * )
+	
+	  INTEGER          I, J
+	
+	  WRITE(*,*)
+	  WRITE(*,*) DESC
+	  M1 = M
+	  N1 = N
+	  if (M1>5) M1 = 5
+	  if (N1>5) N1 = 5  
+	  DO I = 1, M1
+		 WRITE(*,9998) ( A( I, J ), J = 1, N1 )
+	  END DO
+	  
+9998 FORMAT( 11(:,1X,'(',F6.2,',',F6.2,')') )
+	end  
+
+end module utils
+
 program solve
+	use utils
 !     .. Parameters ..
 	INTEGER          N, NRHS
-	PARAMETER        ( N = 10, NRHS = 2 )
+	PARAMETER        ( N = 10000, NRHS = 1 )
 	INTEGER          LDA, LDB
 	PARAMETER        ( LDA = N, LDB = N )
 
@@ -31,6 +58,8 @@ program solve
      real, dimension(2) :: tarray
      real :: result
 
+	 ISEED = (/ 1, 2, 3, 4 /)
+
 	 CALL system_clock(count_rate=cr)
 	 CALL system_clock(count_max=cm)
 	 rate = REAL(cr)
@@ -52,7 +81,7 @@ program solve
 	print *, "1"
 	do i = 1,N
      B(i,1) = R(i)    
-	 B(i,2) = R(i)
+	! B(i,2) = R(i)
 	end do 
 	print *, "2"
      call cpu_time(T2)
@@ -60,6 +89,9 @@ program solve
 
 	 CALL SYSTEM_CLOCK(c1)	
 	 call cpu_time(T1) 
+
+	 CALL PRINT_MATRIX( 'A matrix', N, N, A, LDA )
+
 !   Solve the equations A*X = B.
 
 	CALL CGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
@@ -69,8 +101,18 @@ program solve
 	CALL SYSTEM_CLOCK(c2)	
 	dt3 = T2-T1
 	sys_clock = (c2 - c1)/rate
-	print *, INFO
+	print *
 	print *, dt3, sys_clock
-     !print *, sum(c) 
+
+	IF( INFO.GT.0 ) THEN
+		WRITE(*,*)'The diagonal element of the triangular factor of A,'
+		WRITE(*,*)'U(',INFO,',',INFO,') is zero, so that'
+		WRITE(*,*)'A is singular; the solution could not be computed.'
+		STOP
+	 END IF
+
+	 CALL PRINT_MATRIX( 'Solution', N, NRHS, B, LDB )
+ 
+	 !print *, sum(c) 
      print *,"end"
 end program solve
