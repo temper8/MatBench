@@ -102,8 +102,7 @@ program solve
 !   Solve the equations A*X = B.
 
 	CALL CGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
-!	CALL CGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
-       
+
 	call cpu_time(T2)
 	CALL SYSTEM_CLOCK(c2)	
 	dt3 = T2-T1
