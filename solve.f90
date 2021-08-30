@@ -56,8 +56,8 @@ program solve
 
 	 CHARACTER(len=32) :: arg
 	 integer stat
-     print *, 'Solve the equations A*X = B.'
-	 
+     print *, 'Solve the complex equations A*X = B.'
+	 print *, 'and calc exec time'
 	 CALL getarg(1, arg)
 	 READ(arg,*,iostat=stat)N
 	 if (stat<0) then
