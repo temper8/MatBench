@@ -28,18 +28,14 @@ program solve
 	use utils
 !     .. Parameters ..
 	INTEGER          N, NRHS
-	PARAMETER        ( N = 10000, NRHS = 1 )
+	PARAMETER        ( NRHS = 1 )
 	INTEGER          LDA, LDB
-	PARAMETER        ( LDA = N, LDB = N )
 
-
-
-	
 !     .. Local Scalars ..
 	INTEGER          INFO
 	
 !     .. Local Arrays ..
-	INTEGER          IPIV( N )
+	INTEGER, dimension (:), allocatable ::   IPIV
 !		  COMPLEX          A( LDA, N ), B( LDB, NRHS )
 	complex, dimension (:,:), allocatable :: A
 	complex, dimension (:), allocatable :: R	
@@ -58,23 +54,34 @@ program solve
      real, dimension(2) :: tarray
      real :: result
 
+	 CHARACTER(len=32) :: arg
+	 integer stat
+     print *, 'Solve the equations A*X = B.'
+	 
+	 CALL getarg(1, arg)
+	 READ(arg,*,iostat=stat)N
+	 if (stat<0) then
+		print *, "set default size"
+		N = 4
+	 end if
+	 print *, "N=", N 
+	 LDA = N
+	 LDB = N 
+
 	 ISEED = (/ 1, 2, 3, 4 /)
 
 	 CALL system_clock(count_rate=cr)
 	 CALL system_clock(count_max=cm)
 	 rate = REAL(cr)
-	 WRITE(*,*) "system_clock rate ",rate
+!	 WRITE(*,*) "system_clock rate ",rate
 
-
+	 allocate ( IPIV(N) )
 	 allocate ( A(N,N) )
 	 allocate ( B(LDB,NRHS) )
 	 allocate ( R(N) )
-     print *, 'Solve the equations A*X = B.'
-     print *, "         n", "      init","         parallel", "     no-parallel"
-     !do nn = 100, 2500, 100
-     call cpu_time(T1)  
-	!call dlarnv	(1, ISEED, N,	A )	
-	!call dlarnv	(1, ISEED, N,	R )	
+
+
+    call cpu_time(T1)  
 	call clarnv	(1, ISEED, N*N,	A )	
 	call clarnv	(1, ISEED, N,	R )	
 
