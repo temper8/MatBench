@@ -16,4 +16,8 @@ program test
 
     print *, exec_time
 
+    call matmul_benchmark(n, exec_time)
+
+    print *, exec_time
+
 end program test

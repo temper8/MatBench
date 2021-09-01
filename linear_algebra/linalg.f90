@@ -16,10 +16,10 @@ end
 subroutine init_system_clock()
 	! First initialize the system_clock
 	INTEGER :: cr,cm
-	CALL system_clock(count_rate=cr)
-	CALL system_clock(count_max=cm)
+	call system_clock(count_rate=cr)
+	call system_clock(count_max=cm)
 	rate = REAL(cr)
-	WRITE(*,*) "system_clock rate ",rate
+!	WRITE(*,*) "system_clock rate ",rate
 end	
 
 subroutine init_matrix(a, b, c, n, exec_time)
@@ -34,9 +34,10 @@ subroutine init_matrix(a, b, c, n, exec_time)
 	allocate ( b(n,n) )
 	allocate ( c(n,n) )
 
-	CALL RANDOM_NUMBER(a)
-	CALL RANDOM_NUMBER(b)
-	CALL SYSTEM_CLOCK(c2)    
+	call RANDOM_NUMBER(a)
+	call RANDOM_NUMBER(b)
+
+	call SYSTEM_CLOCK(c2)    
 
 	exec_time = (c2 - c1)/rate
 end
@@ -47,13 +48,24 @@ subroutine matmul_bench(a, b, c, n, exec_time)
 	real :: exec_time
 	INTEGER :: c1,c2
 
-	CALL SYSTEM_CLOCK(c1)
+	call SYSTEM_CLOCK(c1)
 
 	call matmul(a,b,c,n)
 
-	CALL SYSTEM_CLOCK(c2)    
+	call SYSTEM_CLOCK(c2)    
 
 	exec_time = (c2 - c1)/rate
+	
+end
+
+subroutine matmul_benchmark(n, exec_time)
+	real, dimension (:,:), allocatable :: a,b,c
+	integer, intent (in) :: n
+	real :: exec_time
+	
+	call  init_system_clock()
+    call init_matrix(a, b, c, n, exec_time)
+    call matmul_bench(a, b, c, n, exec_time)
 	
 end
 
