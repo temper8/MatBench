@@ -130,7 +130,7 @@ dmypy.json
 
 #
 tmp/
-
+.vscode/
 # fortran
 *.out
 *.mod
