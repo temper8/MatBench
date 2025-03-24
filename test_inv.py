@@ -17,7 +17,7 @@ def matmul(m1, m2):
     return np.matmul(m1, m2)
 
 # Создаем матрицу 2x2
-for n in range(100, 10000, 500):
+for n in range(500, 10000, 500):
     print("Исходная матрица:\n", n)
     matrix = create_mat(n)
     inv_matrix = inverse(matrix)
